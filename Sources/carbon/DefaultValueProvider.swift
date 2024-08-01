@@ -35,6 +35,14 @@ public func DefaultValue(for at: Any.Type) throws -> Any {
     }
 }
 
+public func DefaultValue<A>(for at: A.Type = A.self) throws -> A {
+    guard let v = try DefaultValue(for: A.self) as? A
+    else {
+        throw DefaultValueError.noDefaultValueFor(A.self)
+    }
+    return v
+}
+
 extension Dictionary: DefaultValueProvider {
     public static var defaultValue: Self { [:] }
 }

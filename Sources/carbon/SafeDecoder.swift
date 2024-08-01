@@ -1,3 +1,4 @@
+// Credits
 // Random Generator
 // https://gist.github.com/IanKeen/d3a22473a8f946bffce213a16e02dc2f
 // EmptyDecoder
@@ -55,14 +56,12 @@ extension Decodable {
                 try Self(from: SafeDecoder(from: NSDictionary()))
         }
     }
-    
-//    public static func decode(from top: Any, userInfo: [CodingUserInfoKey: Any]) throws -> Self {
-//        return try Self(from: SafeDecoder(from: top, userInfo: userInfo))
-//    }
 }
 
-enum SafeDecoderError: Error {
+enum SafeDecoderError: Error, Sendable {
     case unsupported(Any.Type)
+//    case unexpectedValue(String, Any.Type)
+    case illegalTransform(of: String, as: Any.Type, to: Any.Type)
     case unsupportedNestingContainer
     case superDecoderUnsupported
 }
@@ -281,7 +280,7 @@ struct UnkeyedContainer: UnkeyedDecodingContainer {
     
     var codingPath: [any CodingKey] = []
     var count: Int?
-    var isAtEnd: Bool { currentIndex >= array.count }
+    var isAtEnd: Bool { currentIndex >= array.count - 1 }
     var currentIndex: Int
     var array: AnyArray
     var userInfo: [CodingUserInfoKey: Any]
@@ -300,9 +299,19 @@ struct UnkeyedContainer: UnkeyedDecodingContainer {
         self.userInfo = userInfo
     }
     
+    func decodeNil() -> Bool {
+        return false
+    }
+
     mutating func decode<T>(_ type: T.Type) throws -> T where T : Decodable {
         let v = try value
-        return try T(from: SafeDecoder(from: v, userInfo: userInfo))
+        if let h = v as? T { return h }
+        let h = try T(from: SafeDecoder(from: v, userInfo: userInfo))
+        if Swift.type(of: v) != Swift.type(of: h) {
+            throw SafeDecoderError.illegalTransform(
+                of: String(describing: v), as: Swift.type(of: v), to: Swift.type(of: h))
+        }
+        return h
     }
 
     func nestedContainer<NestedKey>(keyedBy type: NestedKey.Type) throws -> KeyedDecodingContainer<NestedKey> where NestedKey : CodingKey {
@@ -316,14 +325,9 @@ struct UnkeyedContainer: UnkeyedDecodingContainer {
     func superDecoder() throws -> any Decoder {
         throw SafeDecoderError.superDecoderUnsupported
     }
-    
-    // MARK
-    func decodeNil() -> Bool {
-        return false
-    }
 }
 
-
+/*
 /// The `BaseSingleValueContainer` always returns a default value when the underlying
 /// storage value is missing for the basic types. Zero for all numeric types, `false` for Bools,
 /// and the empty string.
@@ -381,3 +385,4 @@ public extension BaseSingleValueContainer {
         }
     }
 }
+*/
