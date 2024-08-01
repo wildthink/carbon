@@ -4,9 +4,11 @@ Swift Foundational types and methods.
 
 ### Manifest
 
-- [x] SafeDecoder
-- [x] DefaultValueProvider
-- [x] MID64
+- [x] SafeDecoder: Decode values from a in-memory JSON representations.
+- [x] DefaultValueProvider: Any type that provides `static var defaultValue: Self`
+- [x] DefaultValue(): function that provides reasonable default values, in-depth
+- [x] MID64: A generator of 64-bit monotonically increasing IDs
+
 - [ ] UniqueID
 - [ ] MetaKeypath
 - [ ] ActorsStudio
