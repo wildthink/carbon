@@ -21,3 +21,8 @@ Compounds of carbon (organic compounds) form the physical basis
 of all living organisms. Carbon atoms are able to link with each 
 other and with other atoms to form chains and rings, and an 
 infinite variety of carbon compounds exist.
+
+carbon-12 | ˌkärbənˈtwelv |
+noun
+the most common natural carbon isotope, of mass 12. It is the basis
+for the accepted scale of atomic mass units.
