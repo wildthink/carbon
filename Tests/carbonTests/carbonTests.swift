@@ -64,6 +64,28 @@ final class carbonTests: XCTestCase {
         
         let extractedDate = uniqueID.extractDate()
         print("Extracted Date: \(extractedDate)")
+        
+        let m = MID64(tag: 15)
+        print("MI64", m.timestamp, m.counter, m.tag)
     }
 
+    func testErrorHandling() {
+        let errorReporter: ErrorReporter = .default
+        func badFunction() throws -> Int {
+            throw NSError(domain: #function, code: 0)
+        }
+        
+        let result: Int? = 1 ?? errorReporter
+        print("Result: \(String(describing: result))")
+        XCTAssert(result == 1)
+        
+        let result2: Int? = try badFunction() ?? .print
+        print("Result2: \(String(describing: result2))")
+        XCTAssertNil(result2)
+        
+        AssertThrows {
+            let result3: Int? = try badFunction() ?! errorReporter
+            print("Result3: \(String(describing: result3))")
+        }
+    }
 }

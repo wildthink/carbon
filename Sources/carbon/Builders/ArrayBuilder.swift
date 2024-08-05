@@ -37,10 +37,25 @@ import Foundation
 @resultBuilder
 public struct ArrayBuilder<Element> {
     
+    // MARK: Block from Expression
     public static func buildExpression(_ expression: Element) -> [Element] {
         [expression]
     }
     
+    public static func buildExpression(_ expression: [Element]) -> [Element] {
+        return expression
+    }
+    
+    // Optionals
+    public static func buildExpression(_ expression: Element?) -> [Element] {
+        return expression.map { [$0] } ?? []
+    }
+    
+    public static func buildExpression(_ expression: [Element]?) -> [Element] {
+        return expression ?? []
+    }
+
+    // MARK: Block Building
     public static func buildPartialBlock(first: Element) -> [Element] { [first] }
     public static func buildPartialBlock(first: [Element]) -> [Element] { first }
     

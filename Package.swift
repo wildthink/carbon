@@ -3,6 +3,9 @@
 
 import PackageDescription
 
+let includeMacros = false
+let includeDebugTarget = true
+
 let package = Package(
     name: "Carbon",
     platforms: [.macOS(.v14),
@@ -15,22 +18,38 @@ let package = Package(
         .library(
             name: "Carbon",
             targets: [
-                "AnyCodable",
                 "Carbon",
             ]),
+    ],
+    dependencies: [
+//        .package(url: "https://github.com/apple/swift-algorithms.git", from: "1.0.0"),
+        .package(url: "https://github.com/apple/swift-log.git", from: "1.5.0"),
     ],
     targets: [
         .target(
             name: "Carbon",
             dependencies: [
-                "AnyCodable",
+                .product(name: "Logging", package: "swift-log"),
             ]
         ),
-        .target(
-            name: "AnyCodable"),
         .testTarget(
             name: "CarbonTests",
             dependencies: ["Carbon"]
         ),
     ]
 )
+
+//if includeDebugTarget == true {
+//    package.targets.append(
+//        .executableTarget(name: "debug",
+//                          dependencies: [
+//                          ],
+//                          swiftSettings: [
+//                            .unsafeFlags(["-enable-bare-slash-regex"])
+//                          ])
+//    )
+//    
+//    package.products.append(
+//        .executable(name: "debug", targets: ["debug"])
+//    )
+//}

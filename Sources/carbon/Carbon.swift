@@ -1,5 +1,5 @@
 import Foundation
-@_exported import AnyCodable
+//@_exported import AnyCodable
 
 
 public protocol EntityReference: Identifiable, Codable
