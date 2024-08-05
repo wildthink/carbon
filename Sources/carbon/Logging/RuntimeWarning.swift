@@ -5,9 +5,11 @@
 //  Created by Dave DeLong on 10/9/23.
 //
 
+#if false
 import Foundation
 import OSLog
 import Logging
+import SwiftUI
 
 // based on https://www.pointfree.co/blog/posts/70-unobtrusive-runtime-warnings-for-libraries
 
@@ -51,3 +53,5 @@ public let _swiftUIInfo: UnsafeRawPointer? = {
     guard let base = info.dli_fbase else { return nil }
     return UnsafeRawPointer(base)
 }()
+#endif
+

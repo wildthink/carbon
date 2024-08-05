@@ -1,11 +1,14 @@
 //
-//  File.swift
-//  
+//  ErrorReporter.swift
+//
 //
 //  Created by Dave DeLong on 4/1/23.
 //
 
 import Foundation
+import OSLog
+
+let report_log = OSLog(subsystem: "com.wildthink.carbon", category: "report")
 
 infix operator ??: NilCoalescingPrecedence
 
@@ -20,6 +23,14 @@ public struct ErrorReporter {
         fn(error)
     }
     
+    // MARK: Conenience Reporters
+
+    public static func oslog(_ msg: @escaping @autoclosure () -> String) -> ErrorReporter {
+        ErrorReporter { error in
+            os_log(.debug, log: report_log, "%s: %s", msg(), error.localizedDescription)
+        }
+    }
+
     public static let print = ErrorReporter {
         Swift.print($0)
     }

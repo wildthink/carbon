@@ -1,5 +1,6 @@
 import XCTest
 @testable import Carbon
+import OSLog
 
 final class carbonTests: XCTestCase {
     
@@ -87,5 +88,13 @@ final class carbonTests: XCTestCase {
             let result3: Int? = try badFunction() ?! errorReporter
             print("Result3: \(String(describing: result3))")
         }
+    }
+    
+    func testOSlog() {
+        let log = OSLog(subsystem: "carbonTests", category: "carbonTests")
+        os_log(.debug, log: log, "%s", #function)
+        os_log(.info, log: log, "%s", #function)
+        os_log(.fault, log: log, "%s", #function)
+        print("finished")
     }
 }

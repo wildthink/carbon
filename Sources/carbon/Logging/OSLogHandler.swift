@@ -3,13 +3,6 @@
 //  Carbon
 //
 //  Created by Jason Jobe on 8/5/24.
-//
-
-
-//
-//  File.swift
-//  
-//
 //  Created by Dave DeLong on 7/22/23.
 //
 
