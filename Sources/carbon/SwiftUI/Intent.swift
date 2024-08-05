@@ -13,7 +13,7 @@ public struct Intent : Sendable {
     public private(set) var symbol: String = "gearshape"
     var fn: IntentFn
     
-    init(title: String, symbol: String, fn: @escaping IntentFn) {
+    public init(title: String, symbol: String, fn: @escaping IntentFn) {
         self.title = title
         self.symbol = symbol
         self.fn = fn

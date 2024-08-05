@@ -50,8 +50,8 @@ extension Dispatch {
     }
 }
 
-struct DispatchKey<Value>: EnvironmentKey {
-    static var defaultValue: Dispatch<Value> { .warning }
+public struct DispatchKey<Value>: EnvironmentKey {
+    public static var defaultValue: Dispatch<Value> { .warning }
 }
 
 public extension EnvironmentValues {
