@@ -35,54 +35,15 @@ import Foundation
 /// ```
 ///
 @resultBuilder
-public struct ArrayBuilder<Element> {
+public struct ArrayBuilder<Element>: EasyBuilder {
     
-    // MARK: Block from Expression
-    public static func buildExpression(_ expression: Element) -> [Element] {
-        [expression]
+    public static func transduce(_ e: [[Element]], next: Element? = nil) -> [Element] {
+        var b = e.flatMap { $0 }
+        if let next {
+            b.append(next)
+        }
+        return b
     }
-    
-    public static func buildExpression(_ expression: [Element]) -> [Element] {
-        return expression
-    }
-    
-    // Optionals
-    public static func buildExpression(_ expression: Element?) -> [Element] {
-        return expression.map { [$0] } ?? []
-    }
-    
-    public static func buildExpression(_ expression: [Element]?) -> [Element] {
-        return expression ?? []
-    }
-
-    // MARK: Block Building
-    public static func buildPartialBlock(first: Element) -> [Element] { [first] }
-    public static func buildPartialBlock(first: [Element]) -> [Element] { first }
-    
-    public static func buildPartialBlock(accumulated: [Element], next: Element) -> [Element] { accumulated + [next] }
-    @_disfavoredOverload
-    public static func buildPartialBlock(accumulated: [Element], next: [Element]) -> [Element] { accumulated + next }
-    
-    // Empty block
-    public static func buildBlock() -> [Element] { [] }
-    
-    // Empty partial block. Useful for switch cases to represent no elements.
-    public static func buildPartialBlock(first: Void) -> [Element] { [] }
-    
-    // Impossible partial block. Useful for fatalError().
-    public static func buildPartialBlock(first: Never) -> [Element] {}
-    
-    // Block for an 'if' condition.
-    public static func buildIf(_ element: [Element]?) -> [Element] { element ?? [] }
-    
-    // Block for an 'if' condition which also have an 'else' branch.
-    public static func buildEither(first: [Element]) -> [Element] { first }
-    
-    // Block for the 'else' branch of an 'if' condition.
-    public static func buildEither(second: [Element]) -> [Element] { second }
-    
-    // Block for an array of elements. Useful for 'for' loops.
-    public static func buildArray(_ components: [[Element]]) -> [Element] { components.flatMap { $0 } }
 }
 
 public extension Array {
