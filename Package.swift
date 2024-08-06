@@ -20,6 +20,11 @@ let package = Package(
             targets: [
                 "Carbon",
             ]),
+        .library(
+            name: "FSEvents",
+            targets: [
+                "FSEvents",
+            ]),
     ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-log.git", from: "1.5.0"),
@@ -28,6 +33,13 @@ let package = Package(
         .target(
             name: "Carbon",
             dependencies: [
+                .product(name: "Logging", package: "swift-log"),
+            ]
+        ),
+        .target(
+            name: "FSEvents",
+            dependencies: [
+                "Carbon",
                 .product(name: "Logging", package: "swift-log"),
             ]
         ),

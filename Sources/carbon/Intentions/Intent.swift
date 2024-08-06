@@ -5,10 +5,10 @@
 //  Created by Jason Jobe on 8/4/24.
 //
 
-import SwiftUI
+import Foundation
 
 public struct Intent : Sendable {
-    public typealias IntentFn = @MainActor @Sendable () -> Void
+    public typealias IntentFn = @Sendable () -> Void
     public private(set) var title: String
     public private(set) var symbol: String = "gearshape"
     var fn: IntentFn
@@ -18,17 +18,8 @@ public struct Intent : Sendable {
         self.symbol = symbol
         self.fn = fn
     }
-    
-    @MainActor
-    public func callAsFunction() -> Void { fn() }
-}
 
-public extension Button {
-    init (intent: Intent) where Label == SwiftUI.Label<Text,Image> {
-        self.init(action: intent.fn) {
-            SwiftUI.Label(intent.title, systemImage: intent.symbol)
-        }
-    }
+    public func callAsFunction() -> Void { fn() }
 }
 
 public extension Intent {
@@ -61,3 +52,16 @@ public extension Intent {
     }
 
 }
+
+#if canImport(SwiftUI)
+import SwiftUI
+
+public extension Button {
+    init (intent: Intent) where Label == SwiftUI.Label<Text,Image> {
+        self.init(action: intent.fn) {
+            SwiftUI.Label(intent.title, systemImage: intent.symbol)
+        }
+    }
+}
+#endif
+

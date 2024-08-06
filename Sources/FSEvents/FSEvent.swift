@@ -14,6 +14,7 @@
 //
 
 import Foundation
+import Carbon
 
 #if os(macOS)
 
