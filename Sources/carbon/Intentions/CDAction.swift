@@ -32,9 +32,9 @@
     - Building new information from old
     - Example: "John solved the problem" (John MBUILD solution From problem-information)
  
- - ATTEND (Actor, Subject)
+ - ATTEND (Actor, Subject, Timeframe)
     - Focusing of an agent/person towards a stimulus
-    - Example: "John looked at the painting" (John ATTEND painting)
+    - Example: "John looked at the painting for 10 minutes" (John ATTEND painting Timeframe 10 minutes)
  
  - CONSUME (Actor, Object)
     - Ingesting something into the body of an actor
@@ -79,14 +79,16 @@ It has its origins in Schank's Conceptual Dependency Theory.
 - PTRANS  (object: Parameter, from: Parameter, to: Parameter)
 - MTRANS  (information: Parameter, from: Parameter, to: Parameter)
 - MBUILD  (information: Parameter, from: Parameter)
-- ATTEND  (subject: Parameter)
-- CONSUME (object: Parameter, to: Parameter)
-- PRODUCE (object: Parameter, from: Parameter)
+- ATTEND  (subject: Parameter, timeframe: TimeFrame)
+- CONSUME (object: Parameter, amount: Amount)
+- PRODUCE (object: Parameter, amount: Amount)
  */
 public struct CDAction: Identifiable, Codable {
     public typealias Parameter = String
+    public typealias Currency = MID64
     public typealias Amount = Double
-    
+    public typealias TimeFrame = TimeInterval
+
     public let id: MID64
     public let actor: MID64
     public let scope: MID64
@@ -107,22 +109,43 @@ public struct CDAction: Identifiable, Codable {
 extension CDAction {
     /// **Cases**: money, atrans, mtrans, ptrans, mbuild, attend, consume, produce
     public enum Action: Codable {
+        
         /// MONEY   (amount: Amount, from: Parameter, to: Parameter)
-        case money   (amount: Amount, from: Parameter, to: Parameter)
+        case money (unit: Currency, amount: Amount, from: Parameter, to: Parameter)
+        
         /// ATRANS  (object: Parameter, from: Parameter, to: Parameter)
         case atrans  (object: Parameter, from: Parameter, to: Parameter)
-        /// PTRANS  (object: Parameter, from: Parameter, to: Parameter)
-        case ptrans  (object: Parameter, from: Parameter, to: Parameter)
+        
+        /// PTRANS   (object: Parameter, from: Parameter, to: Parameter)
+        case ptrans (object: Parameter, from: Parameter, to: Parameter)
+        
         /// MTRANS  (information: Parameter, from: Parameter, to: Parameter)
-        case mtrans  (information: Parameter, from: Parameter, to: Parameter)
+        case mtrans (information: Parameter, from: Parameter, to: Parameter)
+        
         /// MBUILD  (information: Parameter, from: Parameter)
-        case mbuild  (information: Parameter, from: Parameter)
-        /// ATTEND  (subject: Parameter)
-        case attend  (subject: Parameter)
+        case mbuild (information: Parameter, from: Parameter)
+        
+        /// ATTEND  (subject: Parameter, timeframe: TimeFrame)
+        case attend (subject: Parameter, timeframe: TimeFrame)
+        
         /// CONSUME (object: Parameter, to: Parameter)
-        case consume (object: Parameter, to: Parameter)
+        case consume (object: Parameter, amount: Amount)
+        
         /// PRODUCE (object: Parameter, from: Parameter)
-        case produce (object: Parameter, from: Parameter)
+        case produce (object: Parameter, amount: Amount)
+        
     }
     
+}
+
+extension CDAction {
+    public struct Domain:Codable, Hashable, Equatable, Comparable, Sendable {
+        var id: MID64
+        var alias: String?
+        var scope: [MID64]
+        
+        public static func < (lhs: CDAction.Domain, rhs: CDAction.Domain) -> Bool {
+            lhs.scope < rhs.scope
+        }
+    }
 }
