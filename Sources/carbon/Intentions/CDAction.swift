@@ -82,6 +82,8 @@ It has its origins in Schank's Conceptual Dependency Theory.
 - ATTEND  (subject: Parameter, timeframe: TimeFrame)
 - CONSUME (object: Parameter, amount: Amount)
 - PRODUCE (object: Parameter, amount: Amount)
+- PERFORM (activity: Parameter, amount: Amount, timeframe: Timeframe)
+- MEASURE (amount: Amount, place: Parameter, timeframe: Timeframe)
  */
 public struct CDAction: Identifiable, Codable {
     public typealias Parameter = String
@@ -107,22 +109,32 @@ public struct CDAction: Identifiable, Codable {
 }
 
 extension CDAction {
-    /// **Cases**: money, atrans, mtrans, ptrans, mbuild, attend, consume, produce
-    public enum Action: Codable {
+    /// **Cases**: money, atrans, mtrans, ptrans, mbuild, attend, consume, produce, peform, measure
+    
+//        considering the following Swift enum, create View(s) that can display and, optionally, edit the values for each case.
+//        there should be one view in which the user can select a case and only that case's view/editor will be presented.
+//        prefer horizontal layout when possible and avoid navigation push/pop.
+//        CODE:
+        public enum Action: Codable {
         
         /// MONEY   (amount: Amount, from: Parameter, to: Parameter)
+        /// Transfer money from one account or person to another
         case money (unit: Currency, amount: Amount, from: Parameter, to: Parameter)
         
         /// ATRANS  (object: Parameter, from: Parameter, to: Parameter)
+        /// Transfer of an abstract relationship (e.g., possession, ownership)
         case atrans  (object: Parameter, from: Parameter, to: Parameter)
         
         /// PTRANS   (object: Parameter, from: Parameter, to: Parameter)
+        /// Transfer of physical location of an object
         case ptrans (object: Parameter, from: Parameter, to: Parameter)
         
         /// MTRANS  (information: Parameter, from: Parameter, to: Parameter)
+        /// Transfer of mental information from one agent or person to another
         case mtrans (information: Parameter, from: Parameter, to: Parameter)
         
         /// MBUILD  (information: Parameter, from: Parameter)
+        /// Building new information from old
         case mbuild (information: Parameter, from: Parameter)
         
         /// ATTEND  (subject: Parameter, timeframe: TimeFrame)
@@ -134,6 +146,12 @@ extension CDAction {
         /// PRODUCE (object: Parameter, from: Parameter)
         case produce (object: Parameter, amount: Amount)
         
+        /// PERFORM (activity: Parameter, amount: Amount, timeframe: Timeframe)
+        case perform (activity: Parameter, amount: Amount, timeframe: TimeFrame)
+
+        /// MEASURE (amount: Amount, place: Parameter, timeframe: Timeframe)
+        case measure (amount: Amount, place: Parameter, timeframe: TimeFrame)
+
     }
     
 }
