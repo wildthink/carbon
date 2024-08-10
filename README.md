@@ -13,6 +13,14 @@ Swift Foundational types and methods.
 - [ ] MetaKeypath
 - [ ] ActorsStudio
 
+### Optionally Support
+
+#### SwiftDraw
+SwiftDraw is Swift library for parsing and drawing SVG images and includes a 
+command line tool to convert SVGs into SFSymbol, PNG, PDF and Swift source code
+
+- https://github.com/swhitty/SwiftDraw.git
+- License: zlib License - free for commerical
 
 ### Branding
 carbon | ˈkärbən |
@@ -26,3 +34,9 @@ carbon-12 | ˌkärbənˈtwelv |
 noun
 the most common natural carbon isotope, of mass 12. It is the basis
 for the accepted scale of atomic mass units.
+
+### Credits and Licenses
+
+- Dave Delong: ExtenedSwift https://github.com/davedelong/extendedswift.git
+
+
