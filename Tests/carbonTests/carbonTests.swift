@@ -2,7 +2,21 @@ import XCTest
 @testable import Carbon
 import OSLog
 
+prefix operator ~/
+
+public prefix func ~/ (rhs: String) -> Path {
+    return Path.home/RelativePath(path: rhs)
+}
+
 final class carbonTests: XCTestCase {
+    
+    func testPath() {
+        let ext = "ext"
+        
+        let p1 = /"home"/"town"/ext
+        print(p1)
+        print(~/"dev")
+    }
     
     func testDefaultValues() throws {
         struct Test {
