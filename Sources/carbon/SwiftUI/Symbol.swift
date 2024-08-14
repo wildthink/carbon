@@ -29,8 +29,9 @@ import SwiftDraw
  - And also do not use .scaleToFit() / .aspectRatio() on them either.
  
  Bonus
- - If using an icon-only button, still declare the title of the button’s label
-   and use .labelStyle(.iconOnly) for some great accessibility wins
+ - If using an icon-only button, still declare the title of
+   the button’s label and use .labelStyle(.iconOnly) for some
+   great accessibility wins
  */
 public struct Symbol {
     

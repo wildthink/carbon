@@ -11,7 +11,7 @@
  
  #### Operations
  
- - MONEY (Actor, Amount, From, To)
+ - MONEY (Actor, Unit, Amount, From, To)
  - Transfer of an cash/money (e.g., possession, ownership)
  - Special case because it is so common - NOT part of Schank's original
  - Example: "John gave Mary 5 dollars" (John MONEY 5 dollars From John To Mary)
@@ -74,14 +74,23 @@ import Foundation
  and goods or the production or consumption of some product, good, or service.
  
 It has its origins in Schank's Conceptual Dependency Theory.
+<<<<<<< Updated upstream
 - MONEY   (amount: Amount, from: Parameter, to: Parameter)
+ - MONEY       (unit: Patameter, amount: Amount, from: Parameter, to: Parameter)
 - ATRANS  (object: Parameter, from: Parameter, to: Parameter)
+ - ATRANS      (object: Parameter, from: Parameter, to: Parameter)
 - PTRANS  (object: Parameter, from: Parameter, to: Parameter)
+ - PTRANS     (object: Parameter, from: Parameter, to: Parameter)
 - MTRANS  (information: Parameter, from: Parameter, to: Parameter)
+ - MTRANS     (information: Parameter, from: Parameter, to: Parameter)
 - MBUILD  (information: Parameter, from: Parameter)
+ - MBUILD      (information: Parameter, from: Parameter)
 - ATTEND  (subject: Parameter, timeframe: TimeFrame)
+ - ATTEND      (subject: Parameter, timeframe: TimeFrame)
 - CONSUME (object: Parameter, amount: Amount)
+ - CONSUME  (object: Parameter, amount: Amount)
 - PRODUCE (object: Parameter, amount: Amount)
+ - PRODUCE   (object: Parameter, amount: Amount)
 - PERFORM (activity: Parameter, amount: Amount, timeframe: Timeframe)
 - MEASURE (amount: Amount, place: Parameter, timeframe: Timeframe)
  */
