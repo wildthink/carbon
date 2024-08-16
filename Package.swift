@@ -7,7 +7,7 @@ let includeMacros = false
 let includeDebugTarget = true
 
 let package = Package(
-    name: "Carbon",
+    name: "Carbon14",
     platforms: [.macOS(.v14),
                 .iOS(.v16),
                 .tvOS(.v16),
@@ -16,9 +16,9 @@ let package = Package(
     products: [
         // Products visible to other packages.
         .library(
-            name: "Carbon",
+            name: "Carbon14",
             targets: [
-                "Carbon",
+                "Carbon14",
             ]),
         .library(
             name: "FSEvents",
@@ -31,7 +31,7 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "Carbon",
+            name: "Carbon14",
             dependencies: [
                 .product(name: "Logging", package: "swift-log"),
             ]
@@ -39,13 +39,13 @@ let package = Package(
         .target(
             name: "FSEvents",
             dependencies: [
-                "Carbon",
+                "Carbon14",
                 .product(name: "Logging", package: "swift-log"),
             ]
         ),
         .testTarget(
             name: "CarbonTests",
-            dependencies: ["Carbon"]
+            dependencies: ["Carbon14"]
         ),
     ]
 )

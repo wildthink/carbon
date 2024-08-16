@@ -8,7 +8,7 @@
 import Foundation
 
 public struct Intent : Sendable {
-    public typealias IntentFn = () -> Void
+    public typealias IntentFn = @Sendable () -> Void
     public private(set) var title: String
     public private(set) var symbol: String = "gearshape"
     var fn: IntentFn
