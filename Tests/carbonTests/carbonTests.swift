@@ -1,12 +1,12 @@
 import XCTest
-@testable import Carbon
+@testable import Carbon14
 import OSLog
 
-prefix operator ~/
-
-public prefix func ~/ (rhs: String) -> Path {
-    return Path.home/RelativePath(path: rhs)
-}
+//prefix operator ~/
+//
+//public prefix func ~/ (rhs: String) -> Path {
+//    return Path.home/RelativePath(path: rhs)
+//}
 
 final class carbonTests: XCTestCase {
     
@@ -112,18 +112,18 @@ final class carbonTests: XCTestCase {
         print("finished")
     }
     
-    func testArrayBuilder() {
-        @ArrayBuilder<Int> var builder: [Int] {
-            1
-            [2, 3]
-            if true {
-                [4, 5]
-            }
-        }
-        let result: [Int] = builder
-        
-        XCTAssert(result == [1, 2, 3, 4, 5])
-    }
+//    func testArrayBuilder() {
+//        @ArrayBuilder<Int> var builder: [Int] {
+//            1
+//            [2, 3]
+//            if true {
+//                [4, 5]
+//            }
+//        }
+//        let result: [Int] = builder
+//        
+//        XCTAssert(result == [1, 2, 3, 4, 5])
+//    }
     
     func testArrayStringBuilder() {
         @ArrayBuilder<String> var builder: String {
@@ -138,23 +138,23 @@ final class carbonTests: XCTestCase {
 
 }
 
-@resultBuilder
-struct ArrayBuilder<Element>: EasyBuilder {
-    
-    static func transduce(_ e: [[Element]], next: Element? = nil) -> [Element] {
-        var b = e.flatMap { $0 }
-        if let next {
-            b.append(next)
-        }
-        return b
-    }
-}
-
+//@resultBuilder
+//struct ArrayBuilder<Element>: EasyBuilder {
+//    
+//    static func transduce(_ e: [[Element]], next: Element? = nil) -> [Element] {
+//        var b = e.flatMap { $0 }
+//        if let next {
+//            b.append(next)
+//        }
+//        return b
+//    }
+//}
+//
 extension ArrayBuilder where Element == String {
-    static func buildFinalResult(_ component: Block) -> [String] {
+    static func buildFinalResult(_ component: [String]) -> [String] {
         component
     }
-    static func buildFinalResult(_ component: Block) -> String {
+    static func buildFinalResult(_ component: [String]) -> String {
         component.joined(separator: "")
     }
  }

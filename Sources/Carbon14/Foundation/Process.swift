@@ -9,7 +9,7 @@ import Foundation
 
 #if !os(iOS)
 
-#warning("TODO: better process IO")
+//#warning("TODO: better process IO")
 
 public struct ProcessOutput {
     public let exitCode: Int

@@ -69,3 +69,13 @@ extension Path {
     }()
     
 }
+
+prefix operator ~/
+
+public prefix func ~/ (rhs: String) -> Path {
+    return Path.home/RelativePath(path: rhs)
+}
+
+public prefix func ~/ (rhs: RelativePath) -> Path {
+    return Path.home/rhs
+}
