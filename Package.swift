@@ -21,6 +21,11 @@ let package = Package(
                 "Carbon14",
             ]),
         .library(
+            name: "Carbon14UX",
+            targets: [
+                "Carbon14UX",
+            ]),
+        .library(
             name: "FSEvents",
             targets: [
                 "FSEvents",
@@ -32,6 +37,12 @@ let package = Package(
     targets: [
         .target(
             name: "Carbon14",
+            dependencies: [
+                .product(name: "Logging", package: "swift-log"),
+            ]
+        ),
+        .target(
+            name: "Carbon14UX",
             dependencies: [
                 .product(name: "Logging", package: "swift-log"),
             ]
