@@ -28,7 +28,8 @@ let package = Package(
         .library(
             name: "CarbonLabs",
             targets: [
-                "CarbonLabs",
+               "Carbon14",
+               "CarbonLabs",
             ]),
         .library(
             name: "FSEvents",

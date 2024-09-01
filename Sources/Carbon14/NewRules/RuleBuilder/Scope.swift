@@ -11,7 +11,11 @@ public protocol DynamicValue {
 
 public struct ScopeValues {
     var values: [AnyHashable: Any] = [:]
-    
+    public init() {}
+}
+
+@_spi(InternalScope)
+extension ScopeValues {
     func _get<V>(key: String = #function, default dv: V,
                  _file: String = #fileID, _line: Int = #line
     ) -> V {
