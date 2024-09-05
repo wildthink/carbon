@@ -11,7 +11,7 @@ public struct Intent : Sendable {
     public typealias IntentFn = @Sendable () -> Void
     public private(set) var title: String
     public private(set) var symbol: String = "gearshape"
-    var fn: IntentFn
+    public private(set) var fn: IntentFn
     
     public init(title: String, symbol: String, fn: @escaping IntentFn) {
         self.title = title
@@ -52,16 +52,3 @@ public extension Intent {
     }
 
 }
-
-#if canImport(SwiftUI)
-import SwiftUI
-
-public extension Button {
-    init (intent: Intent) where Label == SwiftUI.Label<Text,Image> {
-        self.init(action: intent.fn) {
-            SwiftUI.Label(intent.title, systemImage: intent.symbol)
-        }
-    }
-}
-#endif
-
