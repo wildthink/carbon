@@ -16,12 +16,13 @@ open class SafeDecoder: Decoder {
     public let userInfo: [CodingUserInfoKey: Any]
     var top: Any?
     
-    public init<T>(from top: T, userInfo: [CodingUserInfoKey: Any] = [:]) {
+    public init(from top: Any? = nil, userInfo: [CodingUserInfoKey: Any] = [:]) {
         self.top = top
         self.codingPath = []
         self.userInfo = userInfo
     }
     
+    // TopLevelDecoder
     public func decode<D: Decodable>(
         _ ct: D.Type = D.self,
         from top: Any

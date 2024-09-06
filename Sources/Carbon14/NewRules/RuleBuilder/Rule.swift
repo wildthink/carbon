@@ -9,14 +9,14 @@ public protocol BuiltinRule {
     func run(environment: ScopeValues) throws
 }
 
+public typealias Builtin = BuiltinRule & Rule
+
 // MARK: - Rule.run() Top Level Entry Point
 public extension Rule {
     func run(top environment: ScopeValues = .init()) throws {
         try self.builtin.run(environment: environment)
     }
 }
-
-public typealias Builtin = BuiltinRule & Rule
 
 public enum RuleError: Error {
     case missing(msg: String, file: String = #file, line: Int = #line)

@@ -30,6 +30,10 @@ public func DefaultValue(for at: Any.Type) throws -> Any {
             t.zero
         case let t as (any ExpressibleByNilLiteral.Type):
             t.init(nilLiteral: ())
+        case let t as (any AnyOptional.Type):
+            t.nilValue
+        case let t as (any Decodable.Type):
+            try SafeDecoder().decode(t, from: NSDictionary())
         default:
             throw DefaultValueError.noDefaultValueFor(at)
     }
@@ -57,4 +61,23 @@ extension Set: DefaultValueProvider {
 
 public enum DefaultValueError: Error {
     case noDefaultValueFor(Any.Type)
+}
+
+protocol AnyOptional {
+  var wrapped: Any? { get }
+  static var nilValue: Self { get }
+}
+
+extension Optional: AnyOptional {
+    
+  static var nilValue: Optional<Wrapped> { nil }
+    
+  var wrapped: Any? {
+    switch self {
+    case let .some(value):
+      return value
+    case .none:
+      return nil
+    }
+  }
 }

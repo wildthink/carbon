@@ -50,6 +50,7 @@ let package = Package(
         .target(
             name: "Carbon14UX",
             dependencies: [
+                "Carbon14",
                 .product(name: "Logging", package: "swift-log"),
             ]
         ),
