@@ -6,6 +6,21 @@
 //
 import Foundation
 
+/**
+ A ``TypeSchema`` provides an easy way to encapsulate some basic meta data about you
+ class or type. The simplist way is to add an extension to one your protocols (see example).
+ The object is lazily created and cached and provides the ``valueType`` and an array
+ mapping the string-name of a property to its KeyPath, giving you a type-safe to read
+ and write a property value by "name".
+ 
+ ``` swift
+ extension MyProtocol {
+     static var schema: TypeSchema { TypeSchema(Self.self) }
+ }
+```
+ 
+ The schema also performs as a Lens with get and set by key-name methods.
+ */
 public struct TypeSchema: Identifiable {
     public let id: ObjectIdentifier
     public var name: String { String(describing: valueType) }
@@ -21,6 +36,20 @@ public struct TypeSchema: Identifiable {
     public func keypath(for key: String) -> AnyKeyPath? {
         fields.first(where: { $0.key == key })?.path
     }
+}
+
+public extension TypeSchema {
+    func get<N>(_ key: String, from nob: N) -> Any? {
+        guard let kp = keypath(for: key) else { return nil }
+        return nob[keyPath: kp]
+    }
+    
+    func set<N, V>(_ key: String, of nob: inout N, to newValue: V) {
+        guard let kp = keypath(for: key) as? WritableKeyPath<N,V>
+        else { return }
+        nob[keyPath: kp] = newValue
+    }
+
 }
 
 extension TypeSchema: CustomStringConvertible  {
