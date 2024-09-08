@@ -7,13 +7,13 @@
 
 import Foundation
 
-public typealias ID<Base, RawValue> = Tagged<Base, RawValue>
+public typealias BundleID<Base, RawValue> = Tagged<Base, RawValue>
 
 extension Bundle {
     
-    public var identifier: ID<Bundle, String>? {
+    public var identifier: BundleID<Bundle, String>? {
         guard let bundleIdentifier else { return nil }
-        return ID(rawValue: bundleIdentifier)
+        return BundleID(rawValue: bundleIdentifier)
     }
     
     public var shortVersionString: String? {
