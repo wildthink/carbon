@@ -12,6 +12,7 @@ let report_log = OSLog(subsystem: "com.wildthink.carbon", category: "report")
 
 infix operator ??: NilCoalescingPrecedence
 
+//@MainActor
 public struct ErrorReporter {
     var fn: (Error) -> Void
     
@@ -44,6 +45,7 @@ public struct ErrorReporter {
     }
 }
 
+//@MainActor
 public func ?? <T>(lhs: @autoclosure () throws -> T, rhs: ErrorReporter) -> T? {
     
     do {
@@ -56,6 +58,7 @@ public func ?? <T>(lhs: @autoclosure () throws -> T, rhs: ErrorReporter) -> T? {
 
 infix operator ?!: NilCoalescingPrecedence
 
+//@MainActor
 public func ?! <T>(lhs: @autoclosure () throws -> T, rhs: ErrorReporter) throws -> T {
     do {
         return try lhs()
@@ -83,6 +86,18 @@ public func !! <T>(lhs: T?, rhs: @autoclosure () -> String) -> T {
     }
     
     fatalError("Error unwrapping value of type \(T.self): \(rhs())")
+}
+
+public func unimplemented(_ fn: String = #function,
+                          file: StaticString = #file, line: UInt = #line
+) -> Never  {
+    fatalError("\(fn) at \(file):\(line) is not implemented.")
+}
+
+public func undefined(_ fn: String = #function,
+                          file: StaticString = #file, line: UInt = #line
+) -> Never  {
+    fatalError("\(fn) at \(file):\(line) is not implemented.")
 }
 
 #if BAD

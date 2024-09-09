@@ -40,11 +40,21 @@ public struct Notice<Value>: DynamicProperty {
 }
 
 public protocol AnyOptional {
-    static var nilValue: Self { get }
+  static var nilValue: Self { get }
+  var wrapped: Any? { get }
 }
 
 extension Optional: AnyOptional {
     public static var nilValue: Optional<Wrapped> { nil }
+
+    public var wrapped: Any? {
+    switch self {
+    case let .some(value):
+      return value
+    case .none:
+      return nil
+    }
+  }
 }
 
 extension Notice where Value == Notification? {
