@@ -57,6 +57,37 @@ extension Optional: AnyOptional {
   }
 }
 
+// MARK: Notification Center Integration
+
+public struct OnNotification<Value>: ViewModifier {
+    @Environment(\.notificationCenter) var nc
+    public private(set) var name: Notification.Name
+    var call: (Value) -> Void
+    
+    public init(name: Notification.Name, call: @escaping (Value) -> Void) {
+        self.name = name
+        self.call = call
+    }
+    
+   public  func body(content: Content) -> some View {
+        content
+            .onReceive(nc.publisher(for: name)) {
+                if let cmd = $0.object as? Value {
+                    call(cmd)
+                }
+            }
+    }
+}
+
+public extension View {
+    func onNotification<Value>(
+    _ name: Notification.Name,
+    call: @escaping (Value) -> Void
+    ) -> some View {
+        modifier(OnNotification(name: name, call: call))
+    }
+}
+
 extension Notice where Value == Notification? {
     public init(_ notificationName: Notification.Name) {
         _core = StateObject(wrappedValue: Core(notificationName: notificationName, initialValue: nil))

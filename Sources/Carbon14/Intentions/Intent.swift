@@ -24,6 +24,17 @@ public struct Intent : Sendable {
 
 public extension Intent {
     
+    // Help / Info
+    static func help(_ fn: IntentFn? = nil) -> Intent {
+        let fn = fn ?? { print("help") }
+        return Intent(title: "Help", symbol: "questionmark", fn: fn)
+    }
+
+    static func info(_ fn: IntentFn? = nil) -> Intent {
+        let fn = fn ?? { print("info") }
+        return Intent(title: "Info", symbol: "info", fn: fn)
+    }
+    
     // CRUD
     static func create(_ fn: IntentFn? = nil) -> Intent {
         let fn = fn ?? { print("create") }
