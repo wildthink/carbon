@@ -1,6 +1,6 @@
 //
 //  MID64.swift
-//  
+//
 //
 //  Created by Jason Jobe on 1/15/24.
 //
@@ -12,10 +12,10 @@ import Foundation
 public struct MID64: Codable, Hashable, Equatable, Comparable, Sendable {
     
     public let value: UInt64
-    public var timestamp: Date { value.extractDate() }
-    public var counter: Int { Int((value << timestampBits) >> timestampBits) }
-    public var tag: Int { Int((value << (64-tagBits)) >> (64-tagBits)) }
-
+    public var timestamp: Date { value.timestamp }
+    public var sequence: Int   { Int(value.sequence) }
+    public var tag: Int        { Int(value.tag) }
+    
     public init(_ value: UInt64) {
         self.value = value
     }
@@ -28,7 +28,7 @@ public struct MID64: Codable, Hashable, Equatable, Comparable, Sendable {
         let container = try decoder.singleValueContainer()
         self.value = try container.decode(UInt64.self)
     }
-        
+    
     public func encode(to encoder: any Encoder) throws {
         var container = encoder.singleValueContainer()
         try container.encode(self.value)
@@ -41,13 +41,11 @@ public struct MID64: Codable, Hashable, Equatable, Comparable, Sendable {
     public static let null: MID64 = 0
 }
 
-fileprivate let timestampBits = 48
-fileprivate let counterBits = 16
-fileprivate let tagBits = 4
-
 extension MID64: CustomStringConvertible {
     public var description: String {
-        String(value)
+        //        String(value)
+        let bytes = value.bytes.map { String(format: "%x", $0) }
+        return bytes.joined(separator: ".")
     }
 }
 
@@ -62,7 +60,6 @@ public class MID64Generator {
     
     private var lastTimestamp: UInt64 = 0
     private var counter: UInt16 = 0
-    private let epoch: UInt64 = 1577836800000 // January 1, 2020, in milliseconds
     private let lock = NSLock()
     
     public init() {}
@@ -71,7 +68,7 @@ public class MID64Generator {
         lock.lock()
         defer { lock.unlock() }
         
-        let currentTimestamp = UInt64(Date().timeIntervalSince1970 * 1000) - epoch
+        let currentTimestamp = UInt64(Date().timeIntervalSinceReferenceDate)
         
         if currentTimestamp != lastTimestamp {
             lastTimestamp = currentTimestamp
@@ -80,19 +77,32 @@ public class MID64Generator {
             counter &+= 1
         }
         
-        let id = (lastTimestamp << (64-timestampBits))
-            | UInt64(counter << tagBits)
-            | UInt64(tag)
+        let id = (lastTimestamp << (64-UInt64._timestampBits))
+        | UInt64(counter << UInt64._tagBits)
+        | UInt64(tag)
         return id
     }
 }
 
 extension UInt64 {
-    private var epoch: UInt64 { 1577836800000 } // January 1, 2020, in milliseconds
+    static let _timestampBits: Int = 40 // Define the number of bits for the timestamp
+    static let _tagBits: Int = 8        // Define the number of bits for the tag
+    static let _counterBits: Int = 16   // Define the number of bits for the counter
     
-    public func extractDate() -> Date {
-        let timestamp = (self >> (64-timestampBits)) + epoch
-        return Date(timeIntervalSince1970: TimeInterval(timestamp) / 1000)
+    var timestamp: Date {
+        let timestamp = self >> (64 - UInt64._timestampBits)
+        return Date(timeIntervalSinceReferenceDate: TimeInterval(timestamp))
+    }
+    
+    var sequence: UInt16 {
+        let counterShift = UInt64._tagBits
+        let counterMask: UInt64 = (1 << UInt64._counterBits) - 1
+        return UInt16((self >> counterShift) & counterMask)
+    }
+    
+    var tag:  UInt8 {
+        let tagMask: UInt64 = (1 << UInt64._tagBits) - 1
+        return UInt8(self & tagMask)
     }
 }
 
