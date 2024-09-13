@@ -19,7 +19,7 @@ public extension Icon {
     Icon(name: Bundle.main.iconFileName)
     
     @MainActor static var appFullsizeIcon: Icon =
-        Icon(name: "AppIcon")
+    Icon(name: "AppIcon")
 }
 
 
@@ -27,8 +27,8 @@ public extension Icon {
 import UIKit
 public extension Icon {
     var image: Image {
-        guard let img = UIImage(named: name)
-        else { return Image(systemName: name) }
+        guard let img = UIImage(named: name, in: bundle, with: .none)
+        else { return Image(name, bundle: bundle) }
         return Image(uiImage: img)
     }
 }

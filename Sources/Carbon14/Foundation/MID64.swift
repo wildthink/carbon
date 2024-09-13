@@ -43,7 +43,12 @@ public struct MID64: Codable, Hashable, Equatable, Comparable, Sendable {
 
 extension MID64: CustomStringConvertible {
     public var description: String {
-        //        String(value)
+        String(value)
+    }
+}
+
+extension MID64: CustomDebugStringConvertible {
+    public var debugDescription: String {
         let bytes = value.bytes.map { String(format: "%x", $0) }
         return bytes.joined(separator: ".")
     }

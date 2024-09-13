@@ -4,10 +4,19 @@ public protocol Action {
     func callAsFunction<A>(_ value: A, in: EnvironmentValues?) -> Bool
 }
 
+public struct DebugSite {
+    var file: String
+    var line: Int
+    
+    init(file: String, line: Int) {
+        self.file = file
+        self.line = line
+    }
+}
 
 struct ActionTrampoline<T>: Action, DynamicProperty {
     
-//    @Environment(\.self) var _viewEnvironment
+    var debug: DebugSite
     var parameterType: T.Type
     var action: (T, EnvironmentValues?) -> Void
 //    var env: EnvironmentValues? = nil
@@ -20,15 +29,23 @@ struct ActionTrampoline<T>: Action, DynamicProperty {
 
 //        public static var defaultValue: SegueDispatcher = .system
     
-    init(action: @escaping (T, EnvironmentValues?) -> Void) {
+    init(_ fid: String = #fileID, _ ln: Int = #line,
+         action: @escaping (T, EnvironmentValues?) -> Void) {
         self.parameterType = T.self
         self.action = action
+        self.debug = DebugSite(file: fid, line: ln)
     }
     
     func callAsFunction<A>(_ value: A, in env: EnvironmentValues?) -> Bool {
         guard let value = value as? T else { return false }
         action(value, env)
         return true
+    }
+}
+
+extension ActionTrampoline: CustomStringConvertible {
+    var description: String {
+        "Action(for: \(parameterType)) \(debug.file):\(debug.line)"
     }
 }
 
@@ -63,10 +80,11 @@ public extension EnvironmentValues {
 
 public extension View {
     func onDispatch<A>(
+        _fid: String = #fileID, _ln: Int = #line,
         for type: A.Type = A.self,
         call: @escaping (A, EnvironmentValues?) -> Void)
     -> some View {
-        let at = ActionTrampoline(action: call)
+        let at = ActionTrampoline(_fid, _ln, action: call)
         return self
             .transformEnvironment(\.dispatch) {
                 $0.actions.append(at)
@@ -76,6 +94,32 @@ public extension View {
 
 // MARK: Helper Views
 import SwiftUI
+
+struct DispatchPresentation<Value, Body: View>: ViewModifier {
+    typealias Dismiss = () -> Void
+    @State var value: Value?
+    @ViewBuilder var bob: (Value, Dismiss) -> Body
+
+    func body(content: Content) -> some View {
+        if let value {
+            bob(value, { self.value = nil })
+        } else {
+            content
+                .onDispatch { v, e in
+                    value = v
+                }
+        }
+    }
+}
+
+public extension View {
+    func presentation<Value, V:View>(
+        for v: Value.Type,
+        @ViewBuilder bob: @escaping (Value, () -> Void) -> V
+    ) -> some View {
+        modifier(DispatchPresentation(bob: bob))
+    }
+}
 
 struct ActionTap<Value>: ViewModifier {
     @Environment(\.self) var env
