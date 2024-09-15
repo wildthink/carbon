@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-#if canImport(Carbon14)
 import Carbon14
 
 public extension Button {
@@ -16,5 +15,3 @@ public extension Button {
         }
     }
 }
-#endif
-

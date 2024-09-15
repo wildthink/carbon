@@ -34,9 +34,19 @@ public func DefaultValue(for at: Any.Type) throws -> Any {
             t.nilValue
         case let t as (any Decodable.Type):
             try SafeDecoder().decode(t, from: NSDictionary())
+        case let t as DefaultValueProvider.Type:
+            try DefaultValue(for: t)
         default:
             throw DefaultValueError.noDefaultValueFor(at)
     }
+}
+
+public func DefaultValue<I: CaseIterable>(for at: I.Type) throws -> I {
+    guard let first = I.allCases.first
+    else {
+        throw DefaultValueError.noDefaultValueFor(at)
+    }
+    return first
 }
 
 public func DefaultValue<A>(for at: A.Type = A.self) throws -> A {
