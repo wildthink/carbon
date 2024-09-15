@@ -7,6 +7,8 @@
 
 import Foundation
 
+public typealias MID = MID64
+
 /// The MID64 is a simple UUID generator that fits into 64 bits
 /// that provides acceptable performance on a given machine.
 public struct MID64: Codable, Hashable, Equatable, Comparable, Sendable {
