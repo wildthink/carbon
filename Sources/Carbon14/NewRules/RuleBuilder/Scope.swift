@@ -8,6 +8,8 @@
 public protocol DynamicValue {
     func update(with: ScopeValues)
 }
+// struct MyShapeStyle: ShapeStyle {
+// func resolve(in environment: EnvironmentValues) -> some ShapeStyle {
 
 public struct ScopeValues {
     var values: [AnyHashable: Any] = [:]

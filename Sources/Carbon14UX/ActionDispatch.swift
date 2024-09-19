@@ -95,6 +95,32 @@ public extension View {
 // MARK: Helper Views
 import SwiftUI
 
+// Define the ActionModifier
+struct ActionModifier<Value, VM: ViewModifier>: ViewModifier
+{
+    @Environment(\.self) var env
+    @State var value: Value?
+    var modifier: (Value, EnvironmentValues) -> VM
+    
+    init(for type: Value.Type = Value.self,
+         modifier: @escaping (Value, EnvironmentValues) -> VM
+    ) {
+        self.modifier = modifier
+    }
+    
+    func body(content: Content) -> some View {
+        if let value {
+            content
+                .modifier(modifier(value, env))
+        } else {
+            content
+                .onDispatch(for: Value.self) { v, e in
+                    value = v
+                }
+        }
+    }
+}
+
 struct DispatchPresentation<Value, Body: View>: ViewModifier {
     typealias Dismiss = () -> Void
     @State var value: Value?
