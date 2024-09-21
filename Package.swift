@@ -39,14 +39,14 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-log.git", from: "1.5.0"),
-        .package(url: "https://github.com/pointfreeco/swift-issue-reporting.git", from: "1.4.0"),
+//        .package(url: "https://github.com/pointfreeco/swift-issue-reporting.git", from: "1.4.0"),
     ],
     targets: [
         .target(
             name: "Carbon14",
             dependencies: [
                 .product(name: "Logging", package: "swift-log"),
-                .product(name: "IssueReporting", package: "swift-issue-reporting"),
+//                .product(name: "IssueReporting", package: "swift-issue-reporting"),
             ]
         ),
         .target(
