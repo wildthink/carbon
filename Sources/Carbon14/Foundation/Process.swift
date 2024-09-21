@@ -11,6 +11,9 @@ import Foundation
 
 //#warning("TODO: better process IO")
 
+public typealias Path = URL
+
+
 public struct ProcessOutput {
     public let exitCode: Int
     public let reason: Process.TerminationReason
@@ -20,9 +23,9 @@ public struct ProcessOutput {
 
 extension Process {
     
-    public static func execute(_ command: Path, arguments: Array<String> = [], environment: Dictionary<String, String>? = nil, cwd: URL? = nil) async throws -> ProcessOutput {
-        return try await execute(command.fileURL, arguments: arguments, environment: environment, cwd: cwd)
-    }
+//    public static func execute(_ command: Path, arguments: Array<String> = [], environment: Dictionary<String, String>? = nil, cwd: URL? = nil) async throws -> ProcessOutput {
+//        return try await execute(command.fileURL, arguments: arguments, environment: environment, cwd: cwd)
+//    }
     
     public static func execute(_ command: URL, arguments: Array<String> = [], environment: Dictionary<String, String>? = nil, cwd: URL? = nil) async throws -> ProcessOutput {
         let p = Process()
@@ -74,8 +77,8 @@ private class ProcessIO {
         self.outputPath = Path.temporaryDirectory.appending(component: "tmp-\(name).out")
         self.errorPath = Path.temporaryDirectory.appending(component: "tmp-\(name).err")
         
-        FileManager.default.createFile(atPath: outputPath)
-        FileManager.default.createFile(atPath: errorPath)
+//        FileManager.default.createFile(atPath: outputPath.path)
+//        FileManager.default.createFile(atPath: errorPath.path)
         
         self.outputHandle = try FileHandle(forUpdating: outputPath)
         self.errorHandle = try FileHandle(forUpdating: errorPath)

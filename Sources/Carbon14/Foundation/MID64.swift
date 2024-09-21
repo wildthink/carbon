@@ -7,6 +7,7 @@
 
 import Foundation
 
+public protocol MIDIdentifiable: Identifiable where ID == MID64 {}
 public typealias MID = MID64
 
 /// The MID64 is a simple UUID generator that fits into 64 bits

@@ -21,20 +21,39 @@ import Foundation
  
  The schema also performs as a Lens with get and set by key-name methods.
  */
-public struct TypeSchema: Identifiable {
+@dynamicMemberLookup
+public final class TypeSchema: Identifiable {
     public let id: ObjectIdentifier
     public var name: String { String(describing: valueType) }
     public let valueType: Any.Type
     public let fields: [(key: String, path: AnyKeyPath)]
+    var userInfo: [String:Any] = [:]
     
-    public init<A>(_ valueType: A.Type) {
-        self.id = ObjectIdentifier(A.self)
+    @_spi(Schematics)
+//    public init<A>(valueType: A.Type) {
+    public init(valueType: Any.Type) {
+        self.id = ObjectIdentifier(valueType)
         self.valueType = valueType
-        self.fields = Carbon14.fields(of: A.self)
+        self.fields = Carbon14.fields(of: valueType)
     }
     
     public func keypath(for key: String) -> AnyKeyPath? {
         fields.first(where: { $0.key == key })?.path
+    }
+    
+    public subscript<V>(dynamicMember key: String) -> V? {
+        get { userInfo[key] as? V }
+        set { userInfo[key] = newValue }
+    }
+}
+
+extension TypeSchema {
+    
+    public static func recall(_ valueType: Any.Type) -> TypeSchema {
+        if let it = TypeSchemaCache.shared[valueType] { return it }
+        let it = TypeSchema(valueType: valueType)
+        TypeSchemaCache.shared[it.id] = it
+        return it
     }
 }
 
@@ -63,18 +82,34 @@ extension TypeSchema: CustomStringConvertible  {
     }
 }
 
-@_spi(Schematics)
-public extension TypeSchema {
-    static var _cache: [ObjectIdentifier:TypeSchema] = [:]
+private class TypeSchemaCache {
 
-    static func clearCache() {
-        _cache = [:]
+    private let lock: os_unfair_lock_t
+    private var storage = [ObjectIdentifier:TypeSchema]()
+
+    static let shared = TypeSchemaCache()
+    private init() {
+        self.lock = .allocate(capacity: 1)
+        self.lock.initialize(to: os_unfair_lock_s())
     }
-    
-    static func cache<A>(for: A.Type) -> TypeSchema? {
-        _cache[ObjectIdentifier(A.self)]
+
+    subscript(oid: ObjectIdentifier) -> TypeSchema? {
+        get {
+            storage[oid]
+        }
+        set {
+            os_unfair_lock_lock(lock); defer { os_unfair_lock_unlock(lock) }
+            storage[oid] = newValue
+        }
     }
-    static func cache(insert: TypeSchema) {
-        _cache[insert.id] = insert
+
+    subscript(type: Any.Type) -> TypeSchema? {
+        get {
+            storage[ObjectIdentifier(type)]
+        }
+        set {
+            os_unfair_lock_lock(lock); defer { os_unfair_lock_unlock(lock) }
+            storage[ObjectIdentifier(type)] = newValue
+        }
     }
 }

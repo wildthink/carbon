@@ -7,6 +7,39 @@
 
 import Foundation
 
+extension URL {
+    
+    public static let home: Self = {
+        #if os(macOS)
+        let passInfo = getpwuid(getuid())
+        if let homeDir = passInfo?.pointee.pw_dir {
+            let homePath = String(cString: homeDir)
+            return URL(filePath: homePath)
+        }
+        #endif
+        
+//        let expanded = ("~/" as NSString).expandingTildeInPath
+
+        let p = NSHomeDirectory()
+        return URL(filePath: p)
+        // jmj - skipping the isSandboxed check
+//        if ProcessInfo.processInfo.entitlements.isSandboxed == false {
+//            return p
+//        } else {
+//            // ~/Library/Containers/{bundle id}/Data
+//            let homeComponents = p.components.dropLast(4)
+//            return Path(Array(homeComponents))
+//        }
+    }()
+    
+}
+
+prefix operator ~/
+
+public prefix func ~/ (rhs: any StringProtocol) -> URL {
+    return URL.home.appending(component: rhs)
+}
+
 extension FileManager {
     
     public func directoryExists(at url: URL) -> Bool {
