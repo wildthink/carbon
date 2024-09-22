@@ -27,7 +27,7 @@ public final class TypeSchema: Identifiable {
     public var name: String { String(describing: valueType) }
     public let valueType: Any.Type
     public let fields: [(key: String, path: AnyKeyPath)]
-    var userInfo: [String:Any] = [:]
+    public var userInfo: [AnyHashable:Any] = [:]
     
     @_spi(Schematics)
 //    public init<A>(valueType: A.Type) {
