@@ -23,9 +23,9 @@ import Foundation
  
  */
 public typealias Day = OrdinalDay
-public struct OrdinalDay {
+public struct OrdinalDay: Codable, Hashable, Equatable, Sendable {
     
-    public enum Period: Int, Comparable {
+    public enum Period: Int, Codable, Comparable, Hashable, Equatable {
         public static func < (lhs: OrdinalDay.Period, rhs: OrdinalDay.Period) -> Bool {
             lhs.rawValue < rhs.rawValue
         }
