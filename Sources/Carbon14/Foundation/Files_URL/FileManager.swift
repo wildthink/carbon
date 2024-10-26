@@ -34,11 +34,11 @@ extension URL {
     
 }
 
-prefix operator ~/
-
-public prefix func ~/ (rhs: any StringProtocol) -> URL {
-    return URL.home.appending(component: rhs)
-}
+//prefix operator ~/
+//
+//public prefix func ~/ (rhs: any StringProtocol) -> URL {
+//    return URL.home.appending(component: rhs)
+//}
 
 extension FileManager {
     
