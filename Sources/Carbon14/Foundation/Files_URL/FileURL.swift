@@ -18,6 +18,7 @@ func ~= (pattern: UTType?, value: UTType?) -> Bool {
 // MARK: URL Extensions
 prefix operator ~/
 
+#if os(macOS)
 /// This prefix operator provides a natural ergomic reference
 /// to the user's home directory
 public prefix func ~/ (lhs: any StringProtocol) -> URL {
@@ -33,6 +34,37 @@ public prefix func ~/ (lhs: URL) -> URL {
         .homeDirectoryForCurrentUser
         .appending(path: lhs.filePath)
 }
+#else
+/*
+ if let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+     print("Documents Directory: \(documentsURL)")
+ }
+ */
+/// This prefix operator provides a natural ergomic reference
+/// to the user's document directory on iOS
+public prefix func ~/ (lhs: any StringProtocol) -> URL {
+    if let documentsURL = FileManager.default
+        .urls(for: .documentDirectory, in: .userDomainMask)
+        .first {
+        return documentsURL.appendingPathComponent(lhs.description)
+    } else {
+        return URL(filePath: lhs.description)
+    }
+}
+
+/// This prefix operator provides a natural ergomic reference
+/// to the user's document directory on iOS
+public prefix func ~/ (lhs: URL) -> URL {
+    if let documentsURL = FileManager.default
+        .urls(for: .documentDirectory, in: .userDomainMask)
+        .first {
+        return documentsURL.appending(component: lhs.filePath)
+    } else {
+        return lhs
+    }
+}
+
+#endif
 
 public extension URL {
     
