@@ -54,10 +54,11 @@ public extension Icon {
 }
 
 extension Image {
-    public init?(data: Data) {
-        guard let imgp = NSImage(data: data)
-        else { return nil }
-        self = Image(nsImage: imgp)
+    public init(data: Data) {
+        let img = NSImage(data: data)
+        self = if let img {
+            Image(nsImage: img)
+        } else { Image(systemName: "circle.slash")}
     }
 }
 

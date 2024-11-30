@@ -37,6 +37,7 @@ public struct Symbol {
     
     public enum SymbolSource {
         case image(PlatformImage)
+        case swatch(AnyShapeStyle)
         case systemName(String)
         case named(String, Bundle?)
         case imageView(SwiftUI.Image)
@@ -55,7 +56,11 @@ public struct Symbol {
     public init(image: PlatformImage) {
         self.sourceProvider = { .image(image) }
     }
-    
+
+    public init(swatch: any ShapeStyle) {
+        self.sourceProvider = { .swatch(.init(swatch)) }
+    }
+
     public init(systemName: String) {
         self.sourceProvider = { .systemName(systemName) }
     }
@@ -80,6 +85,10 @@ extension Symbol {
         self.init(sourceProvider: { .image(image) })
     }
     
+    public static func swatch(_ swatch: any ShapeStyle) -> Self {
+        self.init(sourceProvider: { .swatch(.init(swatch)) })
+    }
+
     #if os(macOS)
     public static func fileType(_ type: UTType) -> Self {
         self.init(sourceProvider: {
@@ -107,13 +116,37 @@ extension Symbol {
 }
 
 extension Symbol: View {
-    
     public var body: some View {
         Image(symbol: self)
     }
     
 }
 
+struct SymbolView: View {
+    var symbol: Symbol
+    
+    var body: some View {
+        switch symbol.sourceProvider() {
+            case .systemName(let sf):
+                Image(systemName: sf)
+            case .named(let name, let bundle):
+                Image(name, bundle: bundle)
+            case .image(let img):
+                Image(platformImage: img)
+            case .swatch(let style):
+                RoundedRectangle(cornerRadius: 8)
+                    .fill(style)
+            case .imageView(let imgView):
+                imgView
+#if canImport(SwiftDraw)
+            case .svgNamed(let name):
+                Image(svgNamed: name, bundle: .main)
+            case .svg(let data):
+                Image(svgData: data)
+#endif
+        }
+    }
+}
 
 extension Image {
     
@@ -125,7 +158,18 @@ extension Image {
             self.init(name, bundle: bundle)
         case .image(let img):
             self.init(platformImage: img)
-        case .imageView(let imgView):
+        case .swatch(let style):
+            let sz = CGSize(width: 100, height: 100)
+            self = Image(size: sz) { context in
+                    context.fill(
+                        Path(
+                            roundedRect: CGRect(origin: .zero, size: sz),
+                            cornerRadius: 0,
+                            style: .continuous),
+                        with: .style(style)
+                    )
+                }
+            case .imageView(let imgView):
             self = imgView
 #if canImport(SwiftDraw)
         case .svgNamed(let name):
