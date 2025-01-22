@@ -20,17 +20,17 @@ let package = Package(
             targets: [
                 "Carbon14",
             ]),
-        .library(
-            name: "Carbon14UX",
-            targets: [
-                "Carbon14UX",
-            ]),
-        .library(
-            name: "CarbonLabs",
-            targets: [
-               "Carbon14",
-               "CarbonLabs",
-            ]),
+//        .library(
+//            name: "Carbon14UX",
+//            targets: [
+//                "Carbon14UX",
+//            ]),
+//        .library(
+//            name: "CarbonLabs",
+//            targets: [
+//               "Carbon14",
+//               "CarbonLabs",
+//            ]),
         .library(
             name: "FSEvents",
             targets: [
@@ -49,20 +49,20 @@ let package = Package(
 //                .product(name: "IssueReporting", package: "swift-issue-reporting"),
             ]
         ),
-        .target(
-            name: "Carbon14UX",
-            dependencies: [
-                "Carbon14",
-                .product(name: "Logging", package: "swift-log"),
-            ]
-        ),
-        .target(
-            name: "CarbonLabs",
-            dependencies: [
-                "Carbon14",
-                .product(name: "Logging", package: "swift-log"),
-            ]
-        ),
+//        .target(
+//            name: "Carbon14UX",
+//            dependencies: [
+//                "Carbon14",
+//                .product(name: "Logging", package: "swift-log"),
+//            ]
+//        ),
+//        .target(
+//            name: "CarbonLabs",
+//            dependencies: [
+//                "Carbon14",
+//                .product(name: "Logging", package: "swift-log"),
+//            ]
+//        ),
         .target(
             name: "FSEvents",
             dependencies: [

@@ -68,7 +68,7 @@ public class MID64Generator {
     
     private var lastTimestamp: UInt64 = 0
     private var counter: UInt16 = 0
-    private let lock = NSLock()
+    private let lock = NSRecursiveLock()
     
     public init() {}
     
