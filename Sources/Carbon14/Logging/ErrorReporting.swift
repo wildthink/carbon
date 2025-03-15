@@ -162,7 +162,7 @@ public struct AnyError: Error, CustomStringConvertible {
     public let description: String
     public let underlyingError: Error?
     
-    public init(_ description: String, function: StaticString = #function, fileID: StaticString = #fileID, line: UInt = #line) {
+    public init(_ description: String = "AnyError", function: StaticString = #function, fileID: StaticString = #fileID, line: UInt = #line) {
         self.function = function
         self.fileID = fileID
         self.line = line

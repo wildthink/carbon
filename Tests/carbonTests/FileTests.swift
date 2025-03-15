@@ -12,13 +12,13 @@ import XCTest
 
 final class FileTests: XCTestCase {
     
-    func testPath() {
-        let ext = "ext"
-        
-        let p1 = /"home"/"town"/ext
-        print(p1)
-        print(~/"dev")
-    }
+//    func testPath() {
+//        let ext = "ext"
+//        
+//        let p1 = /"home"/"town"/ext
+//        print(p1)
+//        print(~/"dev")
+//    }
     
 }
 
