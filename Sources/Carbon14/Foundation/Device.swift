@@ -12,6 +12,7 @@ import SwiftUI
     import UIKit
 #endif
 
+#if os(macOS)
 @MainActor
 @propertyWrapper
 public struct Device: DynamicProperty {
@@ -79,6 +80,7 @@ public extension DeviceInfo {
     }
 #endif
 }
+#endif // os(macOS)
 
 public enum DeviceType: String, Sendable {
     case smartphone = "Smartphone"
@@ -136,7 +138,7 @@ import Combine
 
 @MainActor
 @propertyWrapper
-public struct Orientation: DynamicProperty {
+public struct Device: DynamicProperty {
     @StateObject var core = Core()
     
     public init() {}
@@ -161,7 +163,7 @@ extension UIDeviceOrientation: @retroactive CustomStringConvertible {
         }
     }
 }
-extension Orientation {
+extension Device {
     @MainActor
     final class Core: ObservableObject {
         @Published var orientation: UIDeviceOrientation
